@@ -3,6 +3,7 @@ package com.kirabium.gegemail.service;
 
 import com.kirabium.gegemail.model.Mail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ public interface MailApiService {
      * Get all my Mails
      * @return {@link List}
      */
-    List<Mail> getMails();
+    ArrayList<Mail> getMails();
 
     /**
      * Deletes a mail

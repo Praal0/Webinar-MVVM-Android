@@ -11,7 +11,7 @@ import java.util.List;
 public class MailRepository {
     private static final MailApiService service = DI.getMailApiService();
 
-    public List<Mail> getMails(){
+    public ArrayList<Mail> getMails(){
         return service.getMails();
     }
 

@@ -10,8 +10,10 @@ import com.kirabium.gegemail.events.AddMailEvent;
 import com.kirabium.gegemail.events.DeleteMailEvent;
 import com.kirabium.gegemail.model.Mail;
 import com.kirabium.gegemail.service.MailApiService;
+import com.kirabium.gegemail.viewmodel.MailViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,10 +25,17 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MailViewModel mailViewModel;
+
     private void initUI() {
         setContentView(R.layout.activity_main);
         initBottomNavigationView();
         setButton();
+    }
+
+    private void initViewModel(){
+        mailViewModel = new ViewModelProvider(this).get(MailViewModel.class);
+        mailViewModel.fetchMails();
     }
 
     private void setButton(){
@@ -52,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        initViewModel();
     }
 
 

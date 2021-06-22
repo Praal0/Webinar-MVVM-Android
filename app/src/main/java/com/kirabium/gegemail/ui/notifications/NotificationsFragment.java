@@ -21,6 +21,7 @@ import com.kirabium.gegemail.events.AddMailEvent;
 import com.kirabium.gegemail.events.DeleteMailEvent;
 import com.kirabium.gegemail.model.Mail;
 import com.kirabium.gegemail.service.MailApiService;
+import com.kirabium.gegemail.viewmodel.MailViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -30,13 +31,17 @@ import java.util.ArrayList;
 
 public class NotificationsFragment extends Fragment {
 
-    private static final MailApiService service = DI.getMailApiService();
-    private ArrayList<Mail> mails;
-
+    private ArrayList<Mail> mails = new ArrayList<>();
+    MailViewModel mailViewModel;
     private RecyclerView mRecyclerView;
 
     private void initData(){
-        mails = new ArrayList<>(service.getMails());
+        mailViewModel = new ViewModelProvider(requireActivity()).get(MailViewModel.class);
+        mailViewModel.getMutableLiveData().observe(requireActivity(), mail -> {
+            mails.clear();
+            mails.addAll(mail);
+            mRecyclerView.getAdapter().notifyDataSetChanged();
+        });
     }
 
     private void initRecyclerView(View root) {
@@ -59,35 +64,9 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        initData();
         initRecyclerView(root);
+        initData();
         return root;
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onDeleteEvent(DeleteMailEvent event) {
-        mails.clear();
-        mails.addAll(service.getMails());
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-    };
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAddEvent(AddMailEvent event) {
-        mails.clear();
-        mails.addAll(service.getMails());
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-    };
 
 }

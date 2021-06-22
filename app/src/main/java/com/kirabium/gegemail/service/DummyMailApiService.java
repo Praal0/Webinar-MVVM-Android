@@ -3,6 +3,7 @@ package com.kirabium.gegemail.service;
 
 import com.kirabium.gegemail.model.Mail;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,14 +11,14 @@ import java.util.List;
  */
 public class DummyMailApiService implements MailApiService {
 
-    private final List<Mail> mails = DummyMailGenerator.generateMails();
+    private final ArrayList<Mail> mails = (ArrayList<Mail>) DummyMailGenerator.generateMails();
 
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Mail> getMails() {
+    public ArrayList<Mail> getMails() {
         return mails;
     }
 

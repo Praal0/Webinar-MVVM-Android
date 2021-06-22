@@ -17,15 +17,15 @@ import com.kirabium.gegemail.di.DI;
 import com.kirabium.gegemail.events.AddMailEvent;
 import com.kirabium.gegemail.events.DeleteMailEvent;
 import com.kirabium.gegemail.service.MailApiService;
+import com.kirabium.gegemail.viewmodel.MailViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class HomeFragment extends Fragment {
-
-    private static final MailApiService service = DI.getMailApiService();
     TextView textView;
+    MailViewModel mailViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,31 +35,11 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void updateUI(){
-        String text = "Vous avez " + service.getMails().size() + " mail" + (service.getMails().size() > 1 ? "s" : "");
-        textView.setText(text);
+    private void updateUI() {
+        mailViewModel = new ViewModelProvider(requireActivity()).get(MailViewModel.class);
+        mailViewModel.getMutableLiveData().observe(requireActivity(), mail -> {
+            String text = "Vous avez " + mail.size() + " mail" + (mail.size() > 1 ? "s" : "");
+            textView.setText(text);
+        });
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(DeleteMailEvent event) {
-        updateUI();
-    };
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAddEvent(AddMailEvent event) {
-        updateUI();
-    };
-
 }
