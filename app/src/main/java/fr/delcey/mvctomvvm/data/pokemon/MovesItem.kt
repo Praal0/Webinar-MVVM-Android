@@ -1,7 +1,10 @@
 package fr.delcey.mvctomvvm.data.pokemon
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class MovesItem(
 
     @field:SerializedName("version_group_details")
@@ -9,4 +12,4 @@ data class MovesItem(
 
     @field:SerializedName("move")
     val move: Move? = null
-)
+) : Parcelable

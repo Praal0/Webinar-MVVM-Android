@@ -1,7 +1,10 @@
 package fr.delcey.mvctomvvm.data.pokemon
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class GenerationIii(
 
     @field:SerializedName("firered-leafgreen")
@@ -12,4 +15,4 @@ data class GenerationIii(
 
     @field:SerializedName("emerald")
     val emerald: Emerald? = null
-)
+) : Parcelable

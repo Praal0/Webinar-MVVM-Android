@@ -1,7 +1,10 @@
 package fr.delcey.mvctomvvm.data.pokemon
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Version(
 
     @field:SerializedName("name")
@@ -9,4 +12,4 @@ data class Version(
 
     @field:SerializedName("url")
     val url: String? = null
-)
+) : Parcelable

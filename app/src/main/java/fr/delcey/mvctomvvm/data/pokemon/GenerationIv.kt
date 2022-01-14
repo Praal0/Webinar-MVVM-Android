@@ -1,7 +1,10 @@
 package fr.delcey.mvctomvvm.data.pokemon
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class GenerationIv(
 
     @field:SerializedName("platinum")
@@ -12,4 +15,4 @@ data class GenerationIv(
 
     @field:SerializedName("heartgold-soulsilver")
     val heartgoldSoulsilver: HeartgoldSoulsilver? = null
-)
+) : Parcelable

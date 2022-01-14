@@ -1,7 +1,10 @@
 package fr.delcey.mvctomvvm.data.pokemon
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class FireredLeafgreen(
 
     @field:SerializedName("back_default")
@@ -15,4 +18,4 @@ data class FireredLeafgreen(
 
     @field:SerializedName("front_shiny")
     val frontShiny: String? = null
-)
+) : Parcelable

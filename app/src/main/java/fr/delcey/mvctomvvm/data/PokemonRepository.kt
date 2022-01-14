@@ -1,20 +1,13 @@
 package fr.delcey.mvctomvvm.data
 
 import fr.delcey.mvctomvvm.data.pokemon.PokemonResponse
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.TreeSet
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@ExperimentalCoroutinesApi
 @Singleton
 class PokemonRepository @Inject constructor() {
 
@@ -38,34 +31,20 @@ class PokemonRepository @Inject constructor() {
         pokemonDatasource = retrofit.create(PokemonDatasource::class.java)
     }
 
-    fun getPokemonsFlow(): Flow<List<PokemonResponse>> = channelFlow {
-        val pokemonResponses = TreeSet<PokemonResponse> { o1, o2 ->
-            compareValues(o1?.id, o2?.id)
-        }
+    fun getPokemons(): List<PokemonResponse> {
+        val pokemonResponses = mutableListOf<PokemonResponse>()
 
-        for (pokemonId in 1..30) {
-            // Start a new "sub-coroutine" to make parallel calls thanks to channelFlow
-            launch {
-                try {
-                    val response = pokemonDatasource.getPokemonById(pokemonId.toString())
-
-                    pokemonResponses.add(response)
-                    send(pokemonResponses.toList())
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+        for (i in 1..3) {
+            // TODO That's sad, we have to wait for ALL the pokemons to be queried sequentially to display them
+            //  We should display them as soon as we get them !
+            //  Or even better, query them in parallel !
+            //  And why not both ?!
+            val response = pokemonDatasource.getPokemonById(i.toString()).execute().body()
+            if (response != null) {
+                pokemonResponses.add(response)
             }
         }
-    }
 
-    fun getPokemonByIdFlow(pokemonId: String): Flow<PokemonResponse?> = flow {
-        emit(
-            try {
-                pokemonDatasource.getPokemonById(pokemonId)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        )
+        return pokemonResponses
     }
 }
